@@ -1,3 +1,4 @@
+using Test
 
 function test_load_and_split_data()
     # Define the file path
@@ -47,5 +48,34 @@ function test_split_data()
     println("Test passed.")
 end
 
+# Define a test function
+function test_main()
+    # Call the main function
+    main()
+
+    # Check that the model file was created
+    @test isfile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/model.bson")
+
+    # Check that the model file was created
+    model_path = "/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/model.bson"
+    @test isfile(model_path)
+
+    # Load the model
+    model = BSON.load(model_path)
+
+    # Generate some dummy input data
+    # The shape and type of this data will depend on your specific model
+    input_data = rand(128, 128, 1, 64)
+
+    # Make a prediction
+    prediction = model(input_data)
+
+    # Check that the prediction has the expected shape
+    # Again, the expected shape will depend on your specific model
+    @test size(prediction) == (1, 64)
+end    
+
 # Call the test function
 test_split_data()
+test_load_and_split_data()
+test_main()

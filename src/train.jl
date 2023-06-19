@@ -3,6 +3,7 @@ using Flux
 using Flux: @epochs
 using Flux.Data: DataLoader
 using JSON
+using BSON
 include("data.jl")
 include("model.jl")
 
@@ -81,7 +82,14 @@ function main()
     train_model(model, train_data, test_data, 100, opt)
 
     # Save the trained model
-    Flux.save("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Datasets-examples/model.bson", params(model))
+    model_path = "/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/model.bson"
+    try
+        BSON.@save model_path model
+        println("Model saved successfully.")
+    catch e
+        println("Failed to save the model.")
+        println("Error: ", e)
+    end
 end
 
 main()

@@ -90,5 +90,5 @@ function main()
     train_model(model, train_data, test_data, 100, opt)
 
     # Save the trained model
-    Flux.save("path_to_model_weights/model.bson", params(model))
+    Flux.save("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/model.bson", params(model))
 end

@@ -1,5 +1,6 @@
 # Prediction logic
 using Flux
+using BSON
 include("model.jl")  
 
 # Define the model structure
@@ -12,8 +13,8 @@ output_dim = 1
 model = CNNTOLSTM(input_shape, num_filters, kernel_size, lstm_hidden_dim, output_dim)
 
 # Load the trained model weights into the model structure
-println(isfile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Datasets-examples/model.bson"))
-Flux.loadparams!(model, "/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Datasets-examples/model.bson")
+println(isfile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/model.bson"))
+model = BSON.load("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/model.bson")[:model]
 
 # Define the prediction function
 function predict(model, x)
