@@ -11,14 +11,17 @@ function CNNTOLSTM(input_shape::Tuple{Int,Int}, num_filters::Int, kernel_size::T
     return CNNTOLSTM(
         Flux.Chain(
             Flux.Conv(kernel_size, 1=>num_filters, relu),
+            Flux.Conv(kernel_size, num_filters=>num_filters, relu),  # Additional convolutional layer
             Flux.flatten
         ),
         Flux.Chain(
             Flux.LSTM(num_filters * prod(input_shape .÷ kernel_size), lstm_hidden_dim),
+            Flux.LSTM(lstm_hidden_dim, lstm_hidden_dim),  # Additional LSTM layer
             Flux.Dense(lstm_hidden_dim, output_dim)
         )
     )
 end
+
 
 Flux.@functor CNNTOLSTM
 

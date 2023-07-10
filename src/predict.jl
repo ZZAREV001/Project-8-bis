@@ -6,15 +6,14 @@ include("model.jl")
 # Define the model structure
 input_shape = (128, 128)  
 num_filters = 64  
-kernel_size = (3, 3)  
-lstm_hidden_dim = 128  
+kernel_size = (6, 6)  
+lstm_hidden_dim = 256  
 output_dim = 1  
-
 model = CNNTOLSTM(input_shape, num_filters, kernel_size, lstm_hidden_dim, output_dim)
 
 # Load the trained model weights into the model structure
-println(isfile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/model.bson"))
-model = BSON.load("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/model.bson")[:model]
+println(isfile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-data/model.bson"))
+model = BSON.load("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-data/model.bson")[:model]
 
 # Define the prediction function
 function predict(model, x)

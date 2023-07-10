@@ -1,8 +1,8 @@
 {
     "input_shape": [128, 128],
     "num_filters": 64,
-    "kernel_size": [3, 3],
-    "lstm_hidden": 128,
+    "kernel_size": [6, 6],
+    "lstm_hidden": 256,
     "output_dim": 1,
     "learning_rate": 0.001,
     "batch_size": 32,

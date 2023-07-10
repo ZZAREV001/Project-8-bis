@@ -63,7 +63,7 @@ end
 
 # Main function to orchestrate data loading and preprocessing
 function main()
-    filepath = "/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Datasets-examples/df_order_book_20200817.csv" 
+    filepath = "/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Datasets-examples/churn-bigml-80.csv" 
     train_data, test_data = load_and_split_data(filepath)
 
     # Wrap data into DataLoader
@@ -71,7 +71,7 @@ function main()
     test_data = DataLoader(test_data, batchsize=64)
 
     # Load the hyperparameters
-    hyperparameters = JSON.parsefile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/config/hyperparameters.json")
+    hyperparameters = JSON.parsefile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-data/config/hyperparameters.json")
 
     # Initialize the variables
     input_dim = Tuple(hyperparameters["input_shape"])
@@ -90,5 +90,5 @@ function main()
     train_model(model, train_data, test_data, 100, opt)
 
     # Save the trained model
-    Flux.save("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/model.bson", params(model))
+    Flux.save("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-data/model.bson", params(model))
 end

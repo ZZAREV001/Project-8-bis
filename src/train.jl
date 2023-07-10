@@ -9,12 +9,16 @@ include("model.jl")
 
 # Load the dataset
 function load_data(filepath)
-    data = load_and_split_data(filepath)  # Attention: risk of infinite loop here
-    data = preprocess_data(data)
+    train_data, test_data = load_and_split_data(filepath)  # Returns a tuple of a DataFrame and a Vector
 
-    # Split the data into training and testing sets
-    train_data, test_data = split_data(data)
-    return train_data, test_data
+    # Preprocess the training and testing data separately
+    train_features, train_labels = train_data
+    test_features, test_labels = test_data
+
+    train_features = preprocess_data(train_features)  # Expects a DataFrame
+    test_features = preprocess_data(test_features)  # Expects a DataFrame
+
+    return (train_features, train_labels), (test_features, test_labels)
 end
 
 # Preprocess the dataset
@@ -50,20 +54,19 @@ end
 
 # Main function to orchestrate the training
 function main()
-    filepath = "/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Datasets-examples/df_order_book_20200817.csv" 
-    train_data, test_data = load_data(filepath)
+    filepath = "/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Datasets-examples/churn-bigml-80.csv" 
+    (train_features, train_labels), (test_features, test_labels) = load_data(filepath)
 
-    # Load and preprocess the data
-    train_data, test_data = load_data()
-    train_data = preprocess_data(train_data)
-    test_data = preprocess_data(test_data)
+    # Preprocess the data
+    train_features = preprocess_data(train_features)
+    test_features = preprocess_data(test_features)
 
     # Wrap data into DataLoader
-    train_data = DataLoader(train_data, batchsize=64)
-    test_data = DataLoader(test_data, batchsize=64)
+    train_data = DataLoader((train_features, train_labels), batchsize=64)
+    test_data = DataLoader((test_features, test_labels), batchsize=64)
 
     # Load the hyperparameters
-    hyperparameters = JSON.parsefile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/config/hyperparameters.json")
+    hyperparameters = JSON.parsefile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-data/config/hyperparameters.json")
 
     # Initialize the variables
     input_dim = Tuple(hyperparameters["input_shape"])
@@ -82,7 +85,7 @@ function main()
     train_model(model, train_data, test_data, 100, opt)
 
     # Save the trained model
-    model_path = "/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-fin-data/model.bson"
+    model_path = "/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-data/model.bson"
     try
         BSON.@save model_path model
         println("Model saved successfully.")
@@ -93,4 +96,3 @@ function main()
 end
 
 main()
-
