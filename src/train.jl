@@ -22,15 +22,23 @@ function load_data(filepath)
 end
 
 # Preprocess the dataset
-function preprocess_data(data)
-    # Convert DataFrame to Matrix
-    data = Matrix(data)
+function preprocess_data(df)
 
-    # Convert Matrix to array of appropriate type for Flux
-    data = Array{Float32}(data)
-
-    return data
+    df = Array{Float32}(Matrix(df))
+    
+    df = reshape(df, :, 1, 1)
+  
+    return df
 end
+  
+
+# Define a custom batcher function that converts each minibatch to 4D
+function batcher(data)
+    features, labels = data
+    features = reshape(Matrix(features), :, 1, 1) 
+    return features, labels
+end
+  
 
 # Define the loss function
 loss(model, x, y) = Flux.mse(model(x), y)
@@ -42,7 +50,7 @@ evalcb(loss) = @show(loss)
 function train_model(model, train_data, test_data, epochs, opt)
     for epoch in 1:epochs
         for (x, y) in train_data
-            gs = Flux.gradient(params(model)) do
+            gs = Flux.gradient(Flux.params(model)) do
                 l = loss(model, x, y)
                 evalcb(l)
                 return l
@@ -57,13 +65,15 @@ function main()
     filepath = "/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Datasets-examples/churn-bigml-80.csv" 
     (train_features, train_labels), (test_features, test_labels) = load_data(filepath)
 
-    # Preprocess the data
-    train_features = preprocess_data(train_features)
-    test_features = preprocess_data(test_features)
+    # Load and preprocess data
+    (train_features, train_labels), (test_features, test_labels) = load_data(filepath)
 
-    # Wrap data into DataLoader
-    train_data = DataLoader((train_features, train_labels), batchsize=64)
-    test_data = DataLoader((test_features, test_labels), batchsize=64)
+    train_features = Array(train_features)
+    test_features = Array(test_features)
+
+    # Create DataLoader
+    train_loader = DataLoader((train_features, train_labels), 64, batcher)
+    test_loader = DataLoader((test_features, test_labels), 64, batcher)
 
     # Load the hyperparameters
     hyperparameters = JSON.parsefile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-data/config/hyperparameters.json")
