@@ -5,8 +5,8 @@ include("model.jl")
 
 # Define the model structure
 input_shape = (128, 128)  
-num_filters = 64  
-kernel_size = (6, 6)  
+num_filters = 128  
+kernel_size = (5, 5)  
 lstm_hidden_dim = 256  
 output_dim = 1  
 model = CNNTOLSTM(input_shape, num_filters, kernel_size, lstm_hidden_dim, output_dim)

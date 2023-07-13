@@ -24,19 +24,30 @@ end
 # Preprocess the dataset
 function preprocess_data(df)
 
-    df = Array{Float32}(Matrix(df))
+    df = Array{Float64}(Matrix(df))
     
-    df = reshape(df, :, 1, 1)
+    X = Array(Matrix(df[:,:X1]))
+    Y = Array(Matrix(df[:,:X2]))
+
+    X = reshape(X, :, 1, 1)
+    Y = reshape(Y, :, 1, 1)
+
+    df = hcat(X, Y)
+    print("Type of df: ", typeof(df))
   
     return df
 end
   
 
 # Define a custom batcher function that converts each minibatch to 4D
-function batcher(data)
+function batcher(data::Tuple{Array, Vector})
     features, labels = data
-    features = reshape(Matrix(features), :, 1, 1) 
-    return features, labels
+    
+    features = Array(features)
+    
+    features = reshape(features, :, 1, 1)
+  
+    return features::Array, labels::Vector 
 end
   
 
@@ -66,14 +77,18 @@ function main()
     (train_features, train_labels), (test_features, test_labels) = load_data(filepath)
 
     # Load and preprocess data
-    (train_features, train_labels), (test_features, test_labels) = load_data(filepath)
+    #(train_features, train_labels), (test_features, test_labels) = load_data(filepath)
+    #train_features = preprocess_data(train_features)
+    #test_features = preprocess_data(test_features)
 
-    train_features = Array(train_features)
-    test_features = Array(test_features)
+    #train_features = Array(train_features)
+    #test_features = Array(test_features)
+    train_features = [1.0 2.0; 3.0 4.0] 
+    train_labels = [1, 0]
 
     # Create DataLoader
-    train_loader = DataLoader((train_features, train_labels), 64, batcher)
-    test_loader = DataLoader((test_features, test_labels), 64, batcher)
+    #train_loader = DataLoader((train_features, train_labels), 64, batcher)
+    #test_loader = DataLoader((test_features, test_labels), 64, batcher)
 
     # Load the hyperparameters
     hyperparameters = JSON.parsefile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-data/config/hyperparameters.json")
