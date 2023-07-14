@@ -77,18 +77,16 @@ function main()
     (train_features, train_labels), (test_features, test_labels) = load_data(filepath)
 
     # Load and preprocess data
-    #(train_features, train_labels), (test_features, test_labels) = load_data(filepath)
-    #train_features = preprocess_data(train_features)
-    #test_features = preprocess_data(test_features)
+    (train_features, train_labels), (test_features, test_labels) = load_data(filepath)
+    train_features = preprocess_data(train_features)
+    test_features = preprocess_data(test_features)
 
-    #train_features = Array(train_features)
-    #test_features = Array(test_features)
-    train_features = [1.0 2.0; 3.0 4.0] 
-    train_labels = [1, 0]
+    train_features = Array(train_features)
+    test_features = Array(test_features)
 
     # Create DataLoader
-    #train_loader = DataLoader((train_features, train_labels), 64, batcher)
-    #test_loader = DataLoader((test_features, test_labels), 64, batcher)
+    train_data = (train_features, train_labels)
+    test_data = (test_features, test_labels)
 
     # Load the hyperparameters
     hyperparameters = JSON.parsefile("/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-data/config/hyperparameters.json")
@@ -107,7 +105,8 @@ function main()
     opt = ADAM(0.01)
 
     # Train the model
-    train_model(model, train_data, test_data, 100, opt)
+    print(size(train_features))
+    train_model(model, (train_features, train_labels), (test_features, test_labels), 100, opt)
 
     # Save the trained model
     model_path = "/Users/GoldenEagle/Desktop/Divers/Dossier-cours-IT/AI/Project-analyze-data/model.bson"
